@@ -16,35 +16,37 @@ services:
     image: ghcr.io/blakeblackshear/frigate:stable
     container_name: frigate
     restart: unless-stopped
+    tmpfs:
+      - /tmp/cache
+    shm_size: 64m
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./config/frigate:/config
       - ./storage/frigate:/media/frigate
+      - ./config/frigate:/config
+      - /etc/localtime:/etc/localtime:ro
     environment:
-      - FRIGATE_RTSP_PASSWORD=borrego
-      - FRIGATE_RTSP_USERNAME=123456
+      - FRIGATE_RTSP_USERNAME=borrego # Aun no se configura
+      - FRIGATE_RTSP_PASSWORD=123456 # Aun no se configura
     ports:
       - "5000:5000"
+      - "8554:8554"
+      - "8555:8555/tcp"
+      - "8555:8555/udp"
     networks:
       - local_network
 
-  vstream:
+  rtsp_server:
+    image: bluenviron/mediamtx
+    container_name: rtsp_server
+    networks:
+      - local_network
+
+  fake_camera:
     image: alpine:latest
-    container_name: vstream
+    container_name: fake_camera
     volumes:
       - ./storage/streams:/storage
     command: >
-      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/stream.mp4 -c copy -f flv -loglevel debug rtmp://rtmp_server/live/stream"
-    networks:
-      - local_network
-
-  rtmp_server:
-    image: tiangolo/nginx-rtmp
-    container_name: rtmp_server
-    ports:
-      - "1935:1935"
-    volumes:
-      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/stream.mp4 -c copy -f rtsp -loglevel debug rtsp://rtsp_server:8554/live/stream"
     networks:
       - local_network
 

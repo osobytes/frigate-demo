@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=http://frigate_host:5000/api/config/schema.json
 mqtt:
   enabled: True
 
@@ -6,7 +7,7 @@ cameras:
     enabled: True
     ffmpeg:
       inputs:
-        - path: rtmp://rtmp_server/live/stream
+        - path: rtsp://rtsp_server:8554/live/stream
           roles:
             - detect
             - clip

@@ -10,11 +10,12 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
-# Example configuration.yaml entry
-camera:
-  - platform: ffmpeg
-    name: Frigate Camera
-    input: http://frigate:5000/live/my_virtual_camera/index.m3u8
+# TODO: Investigar como integrar frigate a home assistant.
+# camera:
+#   - platform: ffmpeg
+#     name: Frigate Camera
+#     input: http://frigate:5000/live/my_virtual_camera/index.m3u8
 
-http:
-  server_port: 8123
+# May not be needed
+# http:
+#   server_port: 8123
