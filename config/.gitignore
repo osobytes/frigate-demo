@@ -1,4 +1,7 @@
 home-assistant/**
 !home-assistant/configuration.yaml
+!home-assistant/automations.yaml
+!home-assistant/scenes.yaml
+!home-assistant/scripts.yaml
 frigate/**
 !frigate/config.yml

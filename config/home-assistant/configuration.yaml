@@ -11,10 +11,10 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # TODO: Investigar como integrar frigate a home assistant.
-# camera:
-#   - platform: ffmpeg
-#     name: Frigate Camera
-#     input: http://frigate:5000/live/my_virtual_camera/index.m3u8
+camera:
+  - platform: ffmpeg
+    name: Frigate Camera
+    input: http://frigate:5000/live/my_virtual_camera/index.m3u8
 
 # May not be needed
 # http:
