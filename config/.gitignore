@@ -1,0 +1,4 @@
+home-assistant/**
+!home-assistant/configuration.yaml
+frigate/**
+!frigate/config.yml

@@ -1,0 +1,13 @@
+mqtt:
+  enabled: True
+
+cameras:
+  my_virtual_camera:
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtmp://rtmp_server/live/stream
+          roles:
+            - detect
+            - clip
+            - record

@@ -1,0 +1,54 @@
+version: '3.9'
+services:
+  homeassistant:
+    image: homeassistant/home-assistant
+    container_name: home-assistant
+    volumes:
+      - ./config/home-assistant:/config
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - "8123:8123"
+    networks:
+      - local_network
+
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:stable
+    container_name: frigate
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/frigate:/config
+      - ./storage/frigate:/media/frigate
+    environment:
+      - FRIGATE_RTSP_PASSWORD=borrego
+      - FRIGATE_RTSP_USERNAME=123456
+    ports:
+      - "5000:5000"
+    networks:
+      - local_network
+
+  vstream:
+    image: alpine:latest
+    container_name: vstream
+    volumes:
+      - ./storage/streams:/storage
+    command: >
+      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/stream.mp4 -c copy -f flv -loglevel debug rtmp://rtmp_server/live/stream"
+    networks:
+      - local_network
+
+  rtmp_server:
+    image: tiangolo/nginx-rtmp
+    container_name: rtmp_server
+    ports:
+      - "1935:1935"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - local_network
+
+networks:
+  local_network:
+    name: local_network
+    driver: bridge
