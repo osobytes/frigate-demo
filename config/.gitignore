@@ -5,3 +5,7 @@ home-assistant/**
 !home-assistant/scripts.yaml
 frigate/**
 !frigate/config.yml
+mosquitto/config/**
+mosquitto/log/**
+mosquitto/data/**
+!mosquitto/config/mosquitto.conf

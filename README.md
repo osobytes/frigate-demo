@@ -23,10 +23,13 @@ Este proyecto utiliza Docker para desplegar una solución de automatización del
 - **Otras Configuraciones**:
     - `shm_size`: Configura el tamaño de la memoria compartida a 64m para evitar problemas de memoria con las cámaras.
     - `tmpfs`: `/tmp/cache` se utiliza para almacenar temporalmente los datos de video para el procesamiento.
-
-## Redes
-
 - **local_network**: Una red local definida para permitir la comunicación entre los servicios de Home Assistant y Frigate.
+
+
+### Ejemplo de Deteccion de Objetos
+Aquí se muestra un ejemplo de detección de objetos utilizando Frigate:
+<br/>
+<img src="media/detection.png" alt="Ejemplo de Deteccion de Objetos" width="600"/>
 
 ## Cómo Ejecutar
 

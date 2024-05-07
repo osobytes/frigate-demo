@@ -1,14 +1,47 @@
 # yaml-language-server: $schema=http://frigate_host:5000/api/config/schema.json
 mqtt:
+  host: mosquitto
   enabled: True
 
 cameras:
-  my_virtual_camera:
+  camera_4k:
     enabled: True
     ffmpeg:
       inputs:
-        - path: rtsp://rtsp_server:8554/live/stream
+        - path: rtsp://rtsp_server:8554/live/stream4k
           roles:
             - detect
             - clip
             - record
+  camera_1080p:
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtsp://rtsp_server:8554/live/stream1080p
+          roles:
+            - detect
+            - clip
+            - record
+  camera_hd:
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtsp://rtsp_server:8554/live/streamhd
+          roles:
+            - detect
+            - clip
+            - record
+
+detectors:
+  ov:
+    type: openvino
+    device: AUTO
+    model:
+      path: /openvino-model/ssdlite_mobilenet_v2.xml
+
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt

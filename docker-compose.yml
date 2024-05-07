@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
     tmpfs:
       - /tmp/cache
-    shm_size: 64m
+    shm_size: 128m
     volumes:
       - ./storage/frigate:/media/frigate
       - ./config/frigate:/config
@@ -34,19 +34,54 @@ services:
     networks:
       - local_network
 
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883" # Default MQTT port
+      - "9001:9001" # Websocket port, optional
+    volumes:
+      - ./config/mosquitto/config:/mosquitto/config
+      - ./config/mosquitto/data:/mosquitto/data
+      - ./config/mosquitto/log:/mosquitto/log
+    environment:
+      - TZ=America/Los_Angeles
+    networks:
+      - local_network
+
   rtsp_server:
     image: bluenviron/mediamtx
     container_name: rtsp_server
     networks:
       - local_network
 
-  fake_camera:
+  stream_4k:
     image: alpine:latest
-    container_name: fake_camera
+    container_name: stream_4k
     volumes:
       - ./storage/streams:/storage
     command: >
-      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/stream.mp4 -c copy -f rtsp -loglevel debug rtsp://rtsp_server:8554/live/stream"
+      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/stream4k.mp4 -c copy -f rtsp rtsp://rtsp_server:8554/live/stream4k"
+    networks:
+      - local_network
+
+  stream_1080p:
+    image: alpine:latest
+    container_name: stream_1080p
+    volumes:
+      - ./storage/streams:/storage
+    command: >
+      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/stream1080p.mp4 -c copy -f rtsp rtsp://rtsp_server:8554/live/stream1080p"
+    networks:
+      - local_network
+
+  stream_hd:
+    image: alpine:latest
+    container_name: stream_hd
+    volumes:
+      - ./storage/streams:/storage
+    command: >
+      /bin/sh -c "apk add --no-cache ffmpeg && sleep 10 && ffmpeg -stream_loop -1 -re -i /storage/streamhd.mp4 -c copy -f rtsp rtsp://rtsp_server:8554/live/streamhd"
     networks:
       - local_network
 

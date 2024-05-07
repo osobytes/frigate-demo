@@ -13,8 +13,14 @@ scene: !include scenes.yaml
 # TODO: Investigar como integrar frigate a home assistant.
 camera:
   - platform: ffmpeg
-    name: Fake Camera
-    input: rtsp://rtsp_server:8554/live/stream
+    name: Stream 4K
+    input: rtsp://rtsp_server:8554/live/stream4k
+  - platform: ffmpeg
+    name: Stream 1080p
+    input: rtsp://rtsp_server:8554/live/stream1080p
+  - platform: ffmpeg
+    name: Stream HD
+    input: rtsp://rtsp_server:8554/live/streamhd
 
 # May not be needed
 # http:
